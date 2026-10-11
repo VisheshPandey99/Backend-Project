@@ -19,6 +19,17 @@ import userRouter from './routes/user.routes.js'
 
 
 //routes declaration
-app.use("/api/v1/users" ,userRouter)
+app.use("/api/v1/users", userRouter);
 
-export{app}
+// Global error handling middleware
+app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || err.statuscode || (err.name === 'MulterError' ? 400 : 500);
+    return res.status(statusCode).json({
+        success: false,
+        message: err.message || "Something went wrong",
+        errors: err.errors || [],
+        data: null
+    });
+});
+
+export { app };
