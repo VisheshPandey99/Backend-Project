@@ -1,2 +1,2 @@
-export const DB_NAME="backend db"
+export const DB_NAME="backend_db"
 

@@ -18,13 +18,13 @@ const registerUser = asyncHandler(async (req, res)=>{
 
 
 
-    res.status(200).json({
-        message:"vishesh pandey"
-    })
+    // res.status(200).json({
+    //     message:"vishesh pandey"
+    // })
 
-    const{fullname, email,username, password} = req.body
+    const{fullname,email,username, password} = req.body
     console.log("email",email);
-
+ 
    if(
      
     [
@@ -33,7 +33,7 @@ const registerUser = asyncHandler(async (req, res)=>{
     throw new ApiError(404,"all fields are required")
    }
 
-    const existedUser = User.findOne({
+    const existedUser =  await User.findOne({
     $or:[{username }, {email }]
    })
 
