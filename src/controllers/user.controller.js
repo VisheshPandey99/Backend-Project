@@ -6,8 +6,9 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 
 const generateAccessAndRefreshTokens =async(userId)=>{
     try{
-        await User.findById(userId)
-         const user =user.generateAccessAndRefreshTokens()
+        const user=await User.findById(userId)
+        
+        
          const accessToken= user.generateAccessToken()
          const refreshToken=user.generateRefreshToken()
 
@@ -18,6 +19,7 @@ const generateAccessAndRefreshTokens =async(userId)=>{
 
 
     }catch(error){
+        console.log("Token generation error",error)
         throw new ApiError(500,"Something went wrong while generating refresh and access token")
     }
 }
@@ -109,9 +111,9 @@ const loginUser= asyncHandler(async(req,res)=>{
 
     const {email,password,username}= req.body
 
-    if(!username && !email){
-        throw new ApiError(400,"username or password is required")
-    }
+    // if(!username && !email){
+    //     throw new ApiError(400,"Username or email is required")
+    // }
 
      const user= await User.findOne({
         $or:[{username},{email}]
@@ -130,7 +132,7 @@ const loginUser= asyncHandler(async(req,res)=>{
    const {accessToken,refreshToken}=  await 
    generateAccessAndRefreshTokens(user._id)
 
-  const loggedInUser=  await User.findById(user._Id).
+  const loggedInUser=  await User.findById(user._id).
   select("-password -refreshToken")
 
   const option ={
@@ -178,7 +180,7 @@ const logoutUser= asyncHandler(async(req,res)=>{
   return res
   .status(200)
   .clearCookie("accessToken",option)
-  clearCookie("RefreshToken",option)
+  .clearCookie("refreshToken",option)
   .json(new ApiResponse(200, {},"User logged Out"))
     
 })
