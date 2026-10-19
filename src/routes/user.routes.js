@@ -7,6 +7,7 @@ import { changeCurrentPassword,
     loginUser, 
     logoutUser,
     registerUser, 
+    updateUserAvatar,
      updateAccountDetails,
      updateUsercoverImage }  from "../controllers/user.controller.js";
 
