@@ -15,7 +15,7 @@ import {upload} from "../middlewares/multer.middleware.js";
 
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 
-import {refreshAccessToken} from "../controllers/user.controller.js"
+import {refreshAccessToken} from "../controllers/user.controller.js";
 
 import { get } from "mongoose";
 
@@ -51,7 +51,7 @@ router.route("/update-account").patch(verifyJWT,updateAccountDetails)
 
 router.route("/avatar").patch(verifyJWT,upload.single("avatar"),updateUserAvatar)
 
-router.route("/cover-image").patch(verifyJWT,upload.single("/coverImage"),updateUsercoverImage)
+router.route("/cover-image").patch(verifyJWT,upload.single("coverImage"),updateUsercoverImage)
 
 router.route("/c/:username").get(verifyJWT,getUserChannelProfile)
 
