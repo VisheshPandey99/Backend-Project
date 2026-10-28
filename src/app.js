@@ -23,6 +23,7 @@ app.use("/api/v1/users", userRouter);
 
 // Global error handling middleware
 app.use((err, req, res, next) => {
+    console.log("ERROR STACK",err.stack)
     const statusCode = err.statusCode || err.statuscode || (err.name === 'MulterError' ? 400 : 500);
     return res.status(statusCode).json({
         success: false,
