@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreamHub - Video & Community Platform</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="navbar">
+        <div class="nav-left">
+            <div class="logo" onclick="switchTab('videos')">
+                <span class="logo-icon">▶</span>
+                <span class="logo-text">StreamHub</span>
+            </div>
+        </div>
+
+        <div class="nav-center">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search videos by title or description..." onkeyup="handleSearch(event)">
+                <button onclick="performSearch()">🔍</button>
+            </div>
+        </div>
+
+        <div class="nav-right" id="navAuthSection">
+            <!-- Will be dynamically populated by app.js: Login button or User Profile -->
+        </div>
+    </header>
+
+    <!-- MAIN APP CONTAINER -->
+    <div class="app-layout">
+        <!-- SIDEBAR NAVIGATION -->
+        <aside class="sidebar">
+            <button class="nav-tab active" id="tab-videos" onclick="switchTab('videos')">
+                <span class="icon">🏠</span> Home
+            </button>
+            <button class="nav-tab" id="tab-tweets" onclick="switchTab('tweets')">
+                <span class="icon">💬</span> Community
+            </button>
+            <button class="nav-tab" id="tab-liked" onclick="switchTab('liked')">
+                <span class="icon">👍</span> Liked Videos
+            </button>
+            <button class="nav-tab" id="tab-dashboard" onclick="switchTab('dashboard')">
+                <span class="icon">📊</span> Creator Studio
+            </button>
+            <hr class="sidebar-divider">
+            <button class="nav-tab btn-upload" onclick="openModal('uploadVideoModal')">
+                <span class="icon">➕</span> Upload Video
+            </button>
+        </aside>
+
+        <!-- MAIN CONTENT AREA -->
+        <main class="main-content">
+
+            <!-- 1. VIDEOS FEED SECTION -->
+            <section id="section-videos" class="content-section">
+                <div class="section-header">
+                    <h2>Explore Videos</h2>
+                    <span id="videoCount" class="badge"></span>
+                </div>
+                <div id="videoGrid" class="video-grid">
+                    <!-- Loaded dynamically -->
+                </div>
+            </section>
+
+            <!-- 2. VIDEO WATCH PLAYER SECTION -->
+            <section id="section-watch" class="content-section" style="display: none;">
+                <button class="btn-back" onclick="switchTab('videos')">← Back to Videos</button>
+                <div class="watch-container">
+                    <div class="player-wrapper">
+                        <video id="mainVideoPlayer" controls autoplay></video>
+                        <h1 id="watchVideoTitle" class="video-title"></h1>
+                        <div class="watch-meta">
+                            <div class="channel-info" id="watchChannelInfo">
+                                <!-- Channel info -->
+                            </div>
+                            <div class="watch-actions">
+                                <button id="btnLikeVideo" class="action-btn" onclick="toggleLikeCurrentVideo()">
+                                    <span id="likeVideoIcon">👍</span> Like
+                                </button>
+                                <button id="btnSubscribe" class="btn-subscribe" onclick="toggleSubscribeCurrentChannel()">
+                                    Subscribe
+                                </button>
+                            </div>
+                        </div>
+                        <div class="video-description-box">
+                            <div class="stats-row">
+                                <span id="watchVideoViews">0 views</span> • 
+                                <span id="watchVideoDate"></span>
+                            </div>
+                            <p id="watchVideoDesc"></p>
+                        </div>
+                    </div>
+
+                    <!-- COMMENTS SECTION -->
+                    <div class="comments-section">
+                        <h3>Comments</h3>
+                        <div class="add-comment-box">
+                            <input type="text" id="newCommentInput" placeholder="Add a comment...">
+                            <button onclick="postComment()" class="btn-primary">Comment</button>
+                        </div>
+                        <div id="commentsList" class="comments-list">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. TWEETS / COMMUNITY SECTION -->
+            <section id="section-tweets" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <h2>Community Posts</h2>
+                </div>
+                <div class="tweet-composer">
+                    <textarea id="tweetContentInput" placeholder="What is happening? Share an update with your subscribers..." rows="3"></textarea>
+                    <div class="composer-footer">
+                        <button onclick="postTweet()" class="btn-primary">Post Tweet</button>
+                    </div>
+                </div>
+                <div id="tweetsFeed" class="tweets-feed">
+                    <!-- Populated dynamically -->
+                </div>
+            </section>
+
+            <!-- 4. LIKED VIDEOS SECTION -->
+            <section id="section-liked" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <h2>Liked Videos</h2>
+                </div>
+                <div id="likedVideosGrid" class="video-grid">
+                    <!-- Populated dynamically -->
+                </div>
+            </section>
+
+            <!-- 5. CREATOR STUDIO / DASHBOARD SECTION -->
+            <section id="section-dashboard" class="content-section" style="display: none;">
+                <div class="section-header">
+                    <h2>Creator Studio Dashboard</h2>
+                </div>
+                <div class="stats-cards">
+                    <div class="stat-card">
+                        <span class="stat-icon">👥</span>
+                        <div class="stat-value" id="statSubscribers">0</div>
+                        <div class="stat-label">Total Subscribers</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon">📹</span>
+                        <div class="stat-value" id="statVideos">0</div>
+                        <div class="stat-label">Total Videos</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon">👁️</span>
+                        <div class="stat-value" id="statViews">0</div>
+                        <div class="stat-label">Total Views</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-icon">❤️</span>
+                        <div class="stat-value" id="statLikes">0</div>
+                        <div class="stat-label">Total Video Likes</div>
+                    </div>
+                </div>
+
+                <div class="channel-videos-header">
+                    <h3>Your Uploaded Content</h3>
+                </div>
+                <div id="dashboardVideosList" class="studio-videos-table">
+                    <!-- Populated dynamically -->
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- MODAL: LOGIN -->
+    <div id="loginModal" class="modal">
+        <div class="modal-card">
+            <span class="modal-close" onclick="closeModal('loginModal')">&times;</span>
+            <h2>Sign In to StreamHub</h2>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Email or Username</label>
+                    <input type="text" id="loginIdentifier" required placeholder="Enter username or email">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" required placeholder="Enter password">
+                </div>
+                <button type="submit" class="btn-primary btn-block">Sign In</button>
+            </form>
+            <p class="modal-footer-text">
+                Don't have an account? <a href="#" onclick="openModal('registerModal'); closeModal('loginModal')">Register here</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- MODAL: REGISTER -->
+    <div id="registerModal" class="modal">
+        <div class="modal-card">
+            <span class="modal-close" onclick="closeModal('registerModal')">&times;</span>
+            <h2>Create Your Channel</h2>
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="regFullname" required placeholder="e.g. Vishesh Pandey">
+                </div>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="regUsername" required placeholder="e.g. vishesh">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="regEmail" required placeholder="e.g. vishesh@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="regPassword" required placeholder="Create a secure password">
+                </div>
+                <div class="form-group">
+                    <label>Avatar / Profile Image</label>
+                    <input type="file" id="regAvatar" accept="image/*" required>
+                </div>
+                <div class="form-group">
+                    <label>Cover Banner (Optional)</label>
+                    <input type="file" id="regCover" accept="image/*">
+                </div>
+                <button type="submit" class="btn-primary btn-block">Register Account</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: UPLOAD VIDEO -->
+    <div id="uploadVideoModal" class="modal">
+        <div class="modal-card">
+            <span class="modal-close" onclick="closeModal('uploadVideoModal')">&times;</span>
+            <h2>Publish a New Video</h2>
+            <form id="uploadVideoForm" onsubmit="handleUploadVideo(event)">
+                <div class="form-group">
+                    <label>Video Title</label>
+                    <input type="text" id="uploadTitle" required placeholder="Give your video a catchy title">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="uploadDescription" required placeholder="What is your video about?" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Video File (.mp4, .mov, .mkv)</label>
+                    <input type="file" id="uploadVideoFile" accept="video/*" required>
+                </div>
+                <div class="form-group">
+                    <label>Thumbnail Image (.jpg, .png)</label>
+                    <input type="file" id="uploadThumbnail" accept="image/*" required>
+                </div>
+                <div id="uploadProgress" class="upload-progress" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Uploading to Cloudinary CDN & processing duration... Please wait!</p>
+                </div>
+                <button type="submit" id="btnSubmitVideo" class="btn-primary btn-block">Publish Video</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="toast"></div>
+
+    <script src="/app.js"></script>
+</body>
+</html>
+
