@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import path from 'path';
 
 const app=express();
 app.use(cors({
@@ -11,7 +12,17 @@ app.use(cors({
 app.use(express.json({limit:'16kb'}));
 app.use(express.urlencoded({extended:true,limit:'16kb'}));
 app.use(express.static('public'));  
+app.use(express.static('Public'));  
 app.use(cookieParser());
+
+// Explicit root route handler to serve frontend
+app.get('/', (req, res) => {
+    res.sendFile(path.resolve('Public/index.html'), (err) => {
+        if (err) {
+            res.sendFile(path.resolve('public/index.html'));
+        }
+    });
+});
 
 //routes import
 
