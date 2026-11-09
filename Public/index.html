@@ -261,6 +261,29 @@
         </div>
     </div>
 
+    <!-- MOBILE BOTTOM NAVIGATION (Visible on mobile screens) -->
+    <nav class="mobile-bottom-nav">
+        <button class="mobile-nav-btn active" id="mob-tab-videos" onclick="switchTab('videos')">
+            <span class="icon">🏠</span>
+            <span class="label">Home</span>
+        </button>
+        <button class="mobile-nav-btn" id="mob-tab-tweets" onclick="switchTab('tweets')">
+            <span class="icon">💬</span>
+            <span class="label">Community</span>
+        </button>
+        <button class="mobile-nav-btn mob-btn-upload" onclick="openModal('uploadVideoModal')">
+            <span class="icon">➕</span>
+        </button>
+        <button class="mobile-nav-btn" id="mob-tab-liked" onclick="switchTab('liked')">
+            <span class="icon">👍</span>
+            <span class="label">Liked</span>
+        </button>
+        <button class="mobile-nav-btn" id="mob-tab-dashboard" onclick="switchTab('dashboard')">
+            <span class="icon">📊</span>
+            <span class="label">Studio</span>
+        </button>
+    </nav>
+
     <!-- TOAST NOTIFICATION -->
     <div id="toast" class="toast"></div>
 

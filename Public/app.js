@@ -708,10 +708,12 @@ async function deleteVideo(videoId) {
 function switchTab(tab) {
     hideAllSections();
 
-    // Reset active buttons
-    document.querySelectorAll(".nav-tab").forEach(b => b.classList.remove("active"));
+    // Reset active buttons (desktop sidebar and mobile bottom nav)
+    document.querySelectorAll(".nav-tab, .mobile-nav-btn").forEach(b => b.classList.remove("active"));
     const activeBtn = document.getElementById(`tab-${tab}`);
     if (activeBtn) activeBtn.classList.add("active");
+    const activeMobBtn = document.getElementById(`mob-tab-${tab}`);
+    if (activeMobBtn) activeMobBtn.classList.add("active");
 
     if (tab === "videos") {
         document.getElementById("section-videos").style.display = "block";
