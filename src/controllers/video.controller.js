@@ -96,7 +96,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
 
 // 2. Publish a new video (with video file & thumbnail uploaded to Cloudinary)
 const publishAVideo = asyncHandler(async (req, res) => {
-    const { title, description } = req.body;
+    const { title, description } = req.body || {};
 
     // Validation: title and description must be provided
     if (!title || title.trim() === "" || !description || description.trim() === "") {
@@ -180,7 +180,7 @@ const getVideoById = asyncHandler(async (req, res) => {
 // 4. Update video details (title, description, and optional new thumbnail)
 const updateVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params;
-    const { title, description } = req.body;
+    const { title, description } = req.body || {};
     const thumbnailLocalPath = req.file?.path;
 
     if (!isValidObjectId(videoId)) {
