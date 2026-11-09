@@ -3,17 +3,18 @@ import fs from "fs"
 
 
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME ? process.env.CLOUDINARY_CLOUD_NAME.replace(/['"]/g, "").trim() : "",
+  api_key: process.env.CLOUDINARY_API_KEY ? process.env.CLOUDINARY_API_KEY.replace(/['"]/g, "").trim() : "",
+  api_secret: process.env.CLOUDINARY_API_SECRET ? process.env.CLOUDINARY_API_SECRET.replace(/['"]/g, "").trim() : ""
 });
 
 const uploadOnCloudinary = async (localFilePath) => {
     try {
         if (!localFilePath) return null;
-        // upload the file on cloudinary
+        // upload the file on cloudinary with video support and increased timeout
         const response = await cloudinary.uploader.upload(localFilePath, {
             resource_type: "auto",
+            timeout: 120000
         });
         // file has been uploaded successfully
         if (fs.existsSync(localFilePath)) {
@@ -25,7 +26,7 @@ const uploadOnCloudinary = async (localFilePath) => {
         if (fs.existsSync(localFilePath)) {
             fs.unlinkSync(localFilePath); // remove locally saved temporary file
         }
-        return null;
+        return { error: error.message || "Cloudinary upload failed" };
     }
 };
 export {uploadOnCloudinary}

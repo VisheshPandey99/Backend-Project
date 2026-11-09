@@ -119,12 +119,12 @@ const publishAVideo = asyncHandler(async (req, res) => {
     const videoFile = await uploadOnCloudinary(videoFileLocalPath);
     const thumbnail = await uploadOnCloudinary(thumbnailLocalPath);
 
-    if (!videoFile) {
-        throw new ApiError(400, "Failed to upload video file to Cloudinary");
+    if (!videoFile || videoFile.error || !videoFile.url) {
+        throw new ApiError(400, "Failed to upload video file to Cloudinary: " + (videoFile?.error || "Upload failed"));
     }
 
-    if (!thumbnail) {
-        throw new ApiError(400, "Failed to upload thumbnail to Cloudinary");
+    if (!thumbnail || thumbnail.error || !thumbnail.url) {
+        throw new ApiError(400, "Failed to upload thumbnail to Cloudinary: " + (thumbnail?.error || "Upload failed"));
     }
 
     // Create video document in database
